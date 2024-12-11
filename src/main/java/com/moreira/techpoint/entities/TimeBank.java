@@ -14,9 +14,13 @@ public class TimeBank {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate date;
+    @Column(columnDefinition = "TIME")
     private LocalTime clockIn;
+    @Column(columnDefinition = "TIME")
     private LocalTime lunchOut;
+    @Column(columnDefinition = "TIME")
     private LocalTime lunchIn;
+    @Column(columnDefinition = "TIME")
     private LocalTime clockOut;
 
     @ManyToOne
