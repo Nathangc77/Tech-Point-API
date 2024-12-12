@@ -12,7 +12,7 @@ public interface TimeBankRepository extends JpaRepository<TimeBank, Long> {
 
     @Query("""
             SELECT obj FROM TimeBank obj
-            WHERE obj.employee.employeeId = :employeeId
+            WHERE obj.employee.employeeCode = :employeeCode
             """)
-    Page<TimeBank> searchByEmployeeId(String employeeId, Pageable pageable);
+    Page<TimeBank> searchByEmployeeCode(String employeeCode, Pageable pageable);
 }

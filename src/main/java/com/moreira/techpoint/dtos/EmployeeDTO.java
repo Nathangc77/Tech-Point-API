@@ -7,14 +7,14 @@ import java.time.LocalDate;
 public class EmployeeDTO {
 
     private Long id;
-    private String employeeId;
+    private String employeeCode;
     private String name;
     private String cpf;
     private LocalDate birthDate;
 
-    public EmployeeDTO(Long id, String employeeId, String name, String cpf, LocalDate birthDate) {
+    public EmployeeDTO(Long id, String employeeCode, String name, String cpf, LocalDate birthDate) {
         this.id = id;
-        this.employeeId = employeeId;
+        this.employeeCode = employeeCode;
         this.name = name;
         this.cpf = cpf;
         this.birthDate = birthDate;
@@ -22,7 +22,7 @@ public class EmployeeDTO {
 
     public EmployeeDTO(Employee entity) {
         id = entity.getId();
-        employeeId = entity.getEmployeeId();
+        employeeCode = entity.getEmployeeCode();
         name = entity.getName();
         cpf = entity.getCpf();
         birthDate = entity.getBirthDate();
@@ -32,8 +32,8 @@ public class EmployeeDTO {
         return id;
     }
 
-    public String getEmployeeId() {
-        return employeeId;
+    public String getEmployeeCode() {
+        return employeeCode;
     }
 
     public String getName() {

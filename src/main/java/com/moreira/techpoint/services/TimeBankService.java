@@ -26,15 +26,15 @@ public class TimeBankService {
     }
 
     @Transactional(readOnly = true)
-    public Page<TimeBankDTO> searchTimeBankByEmployee(String employeeId, Pageable pageable) {
-        System.out.println(employeeId);
-        Page<TimeBank> result = repository.searchByEmployeeId(employeeId, pageable);
+    public Page<TimeBankDTO> searchTimeBankByEmployee(String employeeCode, Pageable pageable) {
+        System.out.println(employeeCode);
+        Page<TimeBank> result = repository.searchByEmployeeCode(employeeCode, pageable);
         return result.map(x -> new TimeBankDTO(x));
     }
 
     @Transactional
-    public TimeBankDTO insert(Long id) {
-        Employee employee = repository.getReferenceById(id).getEmployee();
+    public TimeBankDTO insert(Long employeeId) {
+        Employee employee = repository.getReferenceById(employeeId).getEmployee();
         TimeBank entity = new TimeBank();
         entity.setEmployee(employee);
         entity.setDate(LocalDate.now());

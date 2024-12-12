@@ -24,17 +24,17 @@ public class TimeBankController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping(value = "/{employeeId}")
-    public ResponseEntity<Page<TimeBankDTO>> searchTimeBankByEmployee(@PathVariable String employeeId, Pageable pageable) {
-        Page<TimeBankDTO> result = service.searchTimeBankByEmployee(employeeId, pageable);
+    @GetMapping(value = "/{employeeCode}")
+    public ResponseEntity<Page<TimeBankDTO>> searchTimeBankByEmployee(@PathVariable String employeeCode, Pageable pageable) {
+        Page<TimeBankDTO> result = service.searchTimeBankByEmployee(employeeCode, pageable);
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping(value = "/{id}")
-    public ResponseEntity<TimeBankDTO> insert(@PathVariable Long id) {
-        TimeBankDTO dto = service.insert(id);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{employeeId}")
-                .buildAndExpand(dto.getEmployee().getEmployeeId()).toUri();
+    @PostMapping(value = "/{employeeId}")
+    public ResponseEntity<TimeBankDTO> insert(@PathVariable Long employeeId) {
+        TimeBankDTO dto = service.insert(employeeId);
+        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/{employeeCode}")
+                .buildAndExpand(dto.getEmployee().getEmployeeCode()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
 }

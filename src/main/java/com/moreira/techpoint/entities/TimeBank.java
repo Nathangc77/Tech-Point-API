@@ -24,7 +24,7 @@ public class TimeBank {
     private LocalTime clockOut;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "employee_code")
     private Employee employee;
 
     public TimeBank() {
