@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping(value = "/timebank")
@@ -30,4 +30,11 @@ public class TimeBankController {
         return ResponseEntity.ok(result);
     }
 
+    @PostMapping(value = "/{id}")
+    public ResponseEntity<TimeBankDTO> insert(@PathVariable Long id) {
+        TimeBankDTO dto = service.insert(id);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{employeeId}")
+                .buildAndExpand(dto.getEmployee().getEmployeeId()).toUri();
+        return ResponseEntity.created(uri).body(dto);
+    }
 }
