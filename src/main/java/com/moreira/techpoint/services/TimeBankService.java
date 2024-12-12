@@ -9,8 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 public class TimeBankService {
 
@@ -22,4 +20,12 @@ public class TimeBankService {
         Page<TimeBank> result = repository.findAll(pageable);
         return result.map(x -> new TimeBankDTO(x));
     }
+
+    @Transactional(readOnly = true)
+    public Page<TimeBankDTO> searchTimeBankByEmployee(String employeeId, Pageable pageable) {
+        System.out.println(employeeId);
+        Page<TimeBank> result = repository.searchByEmployeeId(employeeId, pageable);
+        return result.map(x -> new TimeBankDTO(x));
+    }
+
 }
