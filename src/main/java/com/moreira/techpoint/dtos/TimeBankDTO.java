@@ -13,16 +13,19 @@ public class TimeBankDTO {
     private LocalTime lunchOut;
     private LocalTime lunchIn;
     private LocalTime clockOut;
-    private EmployeeDTO employee;
+    private Long employeeId;
 
-    public TimeBankDTO(Long id, LocalDate date, LocalTime clockIn, LocalTime lunchOut, LocalTime lunchIn, LocalTime clockOut, EmployeeDTO employee) {
+    public TimeBankDTO(Long id, LocalDate date, LocalTime clockIn, LocalTime lunchOut, LocalTime lunchIn, LocalTime clockOut, Long employeeId) {
         this.id = id;
         this.date = date;
         this.clockIn = clockIn;
         this.lunchOut = lunchOut;
         this.lunchIn = lunchIn;
         this.clockOut = clockOut;
-        this.employee = employee;
+        this.employeeId = employeeId;
+    }
+
+    public TimeBankDTO() {
     }
 
     public TimeBankDTO(TimeBank entity) {
@@ -32,7 +35,7 @@ public class TimeBankDTO {
         lunchOut = entity.getLunchOut();
         lunchIn = entity.getLunchIn();
         clockOut = entity.getClockOut();
-        employee = new EmployeeDTO(entity.getEmployee());
+        employeeId = entity.getEmployee().getId();
     }
 
     public Long getId() {
@@ -59,7 +62,7 @@ public class TimeBankDTO {
         return clockOut;
     }
 
-    public EmployeeDTO getEmployee() {
-        return employee;
+    public Long getEmployeeId() {
+        return employeeId;
     }
 }

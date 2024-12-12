@@ -5,7 +5,6 @@ import com.moreira.techpoint.services.TimeBankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -42,7 +41,15 @@ public class TimeBankController {
     public ResponseEntity<TimeBankDTO> insert(@PathVariable Long employeeId) {
         TimeBankDTO dto = service.insert(employeeId);
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/{employeeCode}")
-                .buildAndExpand(dto.getEmployee().getEmployeeCode()).toUri();
+                .buildAndExpand(dto.getEmployeeId()).toUri();
+        return ResponseEntity.created(uri).body(dto);
+    }
+
+    @PostMapping
+    public ResponseEntity<TimeBankDTO> insertManual(@RequestBody TimeBankDTO dto) {
+        dto = service.insertManual(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/{id}")
+                .buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
 }

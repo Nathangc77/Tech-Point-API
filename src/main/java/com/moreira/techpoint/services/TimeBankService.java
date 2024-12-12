@@ -3,6 +3,7 @@ package com.moreira.techpoint.services;
 import com.moreira.techpoint.dtos.TimeBankDTO;
 import com.moreira.techpoint.entities.Employee;
 import com.moreira.techpoint.entities.TimeBank;
+import com.moreira.techpoint.repositories.EmployeeRepository;
 import com.moreira.techpoint.repositories.TimeBankRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,8 @@ public class TimeBankService {
 
     @Autowired
     private TimeBankRepository repository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     @Transactional(readOnly = true)
     public Page<TimeBankDTO> findAll(Pageable pageable) {
@@ -40,7 +43,7 @@ public class TimeBankService {
 
     @Transactional
     public TimeBankDTO insert(Long employeeId) {
-        Employee employee = repository.getReferenceById(employeeId).getEmployee();
+        Employee employee = employeeRepository.getReferenceById(employeeId);
         TimeBank entity = new TimeBank();
         entity.setEmployee(employee);
         entity.setDate(LocalDate.now());
@@ -48,6 +51,26 @@ public class TimeBankService {
 
         entity = repository.save(entity);
         return new TimeBankDTO(entity);
+    }
+
+    @Transactional
+    public TimeBankDTO insertManual(TimeBankDTO dto) {
+        TimeBank entity = new TimeBank();
+        copyDtoForEntity(dto, entity);
+
+        Employee employee = employeeRepository.getReferenceById(dto.getEmployeeId());
+        entity.setEmployee(employee);
+
+        entity = repository.save(entity);
+        return new TimeBankDTO(entity);
+    }
+
+    private void copyDtoForEntity(TimeBankDTO dto, TimeBank entity) {
+        entity.setDate(dto.getDate());
+        entity.setClockIn(dto.getClockIn());
+        entity.setLunchOut(dto.getLunchOut());
+        entity.setLunchIn(dto.getLunchIn());
+        entity.setClockOut(dto.getClockOut());
     }
 
 }
