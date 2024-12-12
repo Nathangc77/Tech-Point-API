@@ -32,6 +32,12 @@ public class TimeBankService {
         return result.map(x -> new TimeBankDTO(x));
     }
 
+    @Transactional(readOnly = true)
+    public TimeBankDTO findById(Long id) {
+        TimeBank entity = repository.findById(id).get();
+        return new TimeBankDTO(entity);
+    }
+
     @Transactional
     public TimeBankDTO insert(Long employeeId) {
         Employee employee = repository.getReferenceById(employeeId).getEmployee();

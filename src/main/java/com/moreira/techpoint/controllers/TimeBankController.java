@@ -5,6 +5,7 @@ import com.moreira.techpoint.services.TimeBankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -24,11 +25,18 @@ public class TimeBankController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping(value = "/{employeeCode}")
-    public ResponseEntity<Page<TimeBankDTO>> searchTimeBankByEmployee(@PathVariable String employeeCode, Pageable pageable) {
+    @GetMapping(value = "/employee")
+    public ResponseEntity<Page<TimeBankDTO>> searchTimeBankByEmployee(@RequestParam(name="code") String employeeCode, Pageable pageable) {
         Page<TimeBankDTO> result = service.searchTimeBankByEmployee(employeeCode, pageable);
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<TimeBankDTO> findById(@PathVariable Long id) {
+        TimeBankDTO dto = service.findById(id);
+        return ResponseEntity.ok(dto);
+    }
+
 
     @PostMapping(value = "/{employeeId}")
     public ResponseEntity<TimeBankDTO> insert(@PathVariable Long employeeId) {
