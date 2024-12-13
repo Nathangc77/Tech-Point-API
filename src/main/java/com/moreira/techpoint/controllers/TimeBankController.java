@@ -1,6 +1,7 @@
 package com.moreira.techpoint.controllers;
 
 import com.moreira.techpoint.dtos.TimeBankDTO;
+import com.moreira.techpoint.dtos.UpdateTimeBankDTO;
 import com.moreira.techpoint.services.TimeBankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -51,5 +52,11 @@ public class TimeBankController {
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<TimeBankDTO> update(@PathVariable Long id, @RequestBody UpdateTimeBankDTO dto) {
+        TimeBankDTO timeBankDTO = service.update(id, dto);
+        return ResponseEntity.ok(timeBankDTO);
     }
 }

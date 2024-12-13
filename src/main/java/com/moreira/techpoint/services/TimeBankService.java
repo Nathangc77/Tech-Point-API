@@ -1,6 +1,7 @@
 package com.moreira.techpoint.services;
 
 import com.moreira.techpoint.dtos.TimeBankDTO;
+import com.moreira.techpoint.dtos.UpdateTimeBankDTO;
 import com.moreira.techpoint.entities.Employee;
 import com.moreira.techpoint.entities.TimeBank;
 import com.moreira.techpoint.repositories.EmployeeRepository;
@@ -47,7 +48,7 @@ public class TimeBankService {
         TimeBank entity = new TimeBank();
         entity.setEmployee(employee);
         entity.setDate(LocalDate.now());
-        entity.setClockIn(LocalTime.now());
+        entity.setClockIn(LocalTime.now().withNano(0));
 
         entity = repository.save(entity);
         return new TimeBankDTO(entity);
@@ -60,6 +61,24 @@ public class TimeBankService {
 
         Employee employee = employeeRepository.getReferenceById(dto.getEmployeeId());
         entity.setEmployee(employee);
+
+        entity = repository.save(entity);
+        return new TimeBankDTO(entity);
+    }
+
+    @Transactional
+    public TimeBankDTO update(Long id, UpdateTimeBankDTO dto) {
+        TimeBank entity = repository.getReferenceById(id);
+
+        if (dto.isUpdateLunchOut() && entity.getLunchOut() == null && LocalTime.now().isAfter(entity.getClockIn())) {
+            entity.setLunchOut(LocalTime.now().withNano(0));
+        } else if (dto.isUpdateLunchIn() && entity.getLunchIn() == null && LocalTime.now().isAfter(entity.getLunchOut())) {
+            entity.setLunchIn(LocalTime.now().withNano(0));
+        } else if (dto.isUpdateClockOut() && entity.getClockOut() == null && LocalTime.now().isAfter(entity.getLunchIn())) {
+            entity.setClockOut(LocalTime.now().withNano(0));
+        } else {
+            throw new IllegalArgumentException();
+        }
 
         entity = repository.save(entity);
         return new TimeBankDTO(entity);
