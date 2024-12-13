@@ -1,5 +1,6 @@
 package com.moreira.techpoint.services;
 
+import com.moreira.techpoint.dtos.DeletionRequestDTO;
 import com.moreira.techpoint.dtos.TimeBankDTO;
 import com.moreira.techpoint.dtos.UpdateTimeBankDTO;
 import com.moreira.techpoint.entities.Employee;
@@ -109,6 +110,14 @@ public class TimeBankService {
 
         entity = repository.save(entity);
         return new TimeBankDTO(entity);
+    }
+
+    @Transactional
+    public void softDelete(Long id, DeletionRequestDTO dto) {
+        TimeBank entity = repository.getReferenceById(id);
+        entity.setDeleted(true);
+        entity.setDeleteReason(dto.getDeleteReason());
+        repository.save(entity);
     }
 
     private void copyDtoForEntity(TimeBankDTO dto, TimeBank entity) {

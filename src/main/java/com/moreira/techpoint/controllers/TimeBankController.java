@@ -1,5 +1,6 @@
 package com.moreira.techpoint.controllers;
 
+import com.moreira.techpoint.dtos.DeletionRequestDTO;
 import com.moreira.techpoint.dtos.TimeBankDTO;
 import com.moreira.techpoint.dtos.UpdateTimeBankDTO;
 import com.moreira.techpoint.services.TimeBankService;
@@ -64,5 +65,11 @@ public class TimeBankController {
     public ResponseEntity<TimeBankDTO> updateManual(@PathVariable Long id, @RequestBody TimeBankDTO dto) {
         dto = service.updateManual(id, dto);
         return ResponseEntity.ok(dto);
+    }
+
+    @PatchMapping(value = "/delete/{id}")
+    public ResponseEntity<Void> softDelete(@PathVariable Long id, @RequestBody DeletionRequestDTO dto)  {
+        service.softDelete(id, dto);
+        return ResponseEntity.noContent().build();
     }
 }

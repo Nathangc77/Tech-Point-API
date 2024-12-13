@@ -27,6 +27,9 @@ public class TimeBank {
     @JoinColumn(name = "employee_code")
     private Employee employee;
 
+    private boolean isDeleted;
+    private String deleteReason;
+
     public TimeBank() {
     }
 
@@ -93,6 +96,22 @@ public class TimeBank {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public String getDeleteReason() {
+        return deleteReason;
+    }
+
+    public void setDeleteReason(String deleteReason) {
+        this.deleteReason = deleteReason;
     }
 
     @Override
