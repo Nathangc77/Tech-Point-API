@@ -46,7 +46,7 @@ public class TimeBankController {
         return ResponseEntity.created(uri).body(dto);
     }
 
-    @PostMapping
+    @PostMapping(value = "/admin")
     public ResponseEntity<TimeBankDTO> insertManual(@RequestBody TimeBankDTO dto) {
         dto = service.insertManual(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/{id}")
@@ -58,5 +58,11 @@ public class TimeBankController {
     public ResponseEntity<TimeBankDTO> update(@PathVariable Long id, @RequestBody UpdateTimeBankDTO dto) {
         TimeBankDTO timeBankDTO = service.update(id, dto);
         return ResponseEntity.ok(timeBankDTO);
+    }
+
+    @PutMapping(value = "/admin/{id}")
+    public ResponseEntity<TimeBankDTO> updateManual(@PathVariable Long id, @RequestBody TimeBankDTO dto) {
+        dto = service.updateManual(id, dto);
+        return ResponseEntity.ok(dto);
     }
 }

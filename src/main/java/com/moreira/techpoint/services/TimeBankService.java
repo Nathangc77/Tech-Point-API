@@ -84,6 +84,33 @@ public class TimeBankService {
         return new TimeBankDTO(entity);
     }
 
+    @Transactional
+    public TimeBankDTO updateManual(Long id, TimeBankDTO dto) {
+        TimeBank entity = repository.getReferenceById(id);
+
+        if ((dto.getLunchOut() != null && entity.getClockIn() != null &&
+                (entity.getLunchOut() == null || entity.getClockIn().isBefore(dto.getLunchOut())))) {
+            entity.setLunchOut(dto.getLunchOut());
+        }
+
+        if ((dto.getLunchIn() != null && entity.getLunchOut() != null &&
+                (entity.getLunchIn() == null || entity.getLunchOut().isBefore(dto.getLunchIn())))) {
+            entity.setLunchIn(dto.getLunchIn());
+        }
+
+        if ((dto.getClockOut() != null && entity.getLunchIn() != null &&
+                (entity.getClockOut() == null || entity.getLunchIn().isBefore(dto.getClockOut())))) {
+            entity.setClockOut(dto.getClockOut());
+        }
+
+        if ((dto.getClockIn() != null && (entity.getClockIn() == null || entity.getClockIn().isBefore(dto.getLunchOut())))) {
+            entity.setClockIn(dto.getClockIn());
+        }
+
+        entity = repository.save(entity);
+        return new TimeBankDTO(entity);
+    }
+
     private void copyDtoForEntity(TimeBankDTO dto, TimeBank entity) {
         entity.setDate(dto.getDate());
         entity.setClockIn(dto.getClockIn());
@@ -91,5 +118,4 @@ public class TimeBankService {
         entity.setLunchIn(dto.getLunchIn());
         entity.setClockOut(dto.getClockOut());
     }
-
 }
