@@ -1,6 +1,6 @@
-INSERT INTO tb_employee (employee_code, name, cpf, birth_date, password) VALUES ('0001', 'Alice Silva', '12345678900', '1990-01-15', '123456');
-INSERT INTO tb_employee (employee_code, name, cpf, birth_date, password) VALUES ('0002', 'Bruno Costa', '98765432100', '1985-06-22', '123456');
-INSERT INTO tb_employee (employee_code, name, cpf, birth_date, password) VALUES ('0003', 'Carla Souza', '45678912300', '1992-12-08', '123456');
+INSERT INTO tb_employee (employee_code, name, cpf, birth_date, password) VALUES ('EMP-1', 'Alice Silva', '12345678900', '1990-01-15', '123456');
+INSERT INTO tb_employee (employee_code, name, cpf, birth_date, password) VALUES ('EMP-2', 'Bruno Costa', '98765432100', '1985-06-22', '123456');
+INSERT INTO tb_employee (employee_code, name, cpf, birth_date, password) VALUES ('EMP-3', 'Carla Souza', '45678912300', '1992-12-08', '123456');
 
 INSERT INTO tb_time_bank (date, clock_in, lunch_out, lunch_in, clock_out, employee_code, is_deleted) VALUES ('2024-12-01', '08:00:00', '12:00:00', '13:00:00', '17:00:00', 1, false);
 INSERT INTO tb_time_bank (date, clock_in, lunch_out, lunch_in, clock_out, employee_code, is_deleted) VALUES ('2024-12-02', '08:05:00', '12:05:00', '13:05:00', '17:05:00', 1, false);

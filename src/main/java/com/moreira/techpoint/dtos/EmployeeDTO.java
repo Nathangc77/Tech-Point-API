@@ -12,6 +12,9 @@ public class EmployeeDTO {
     private String cpf;
     private LocalDate birthDate;
 
+    public EmployeeDTO() {
+    }
+
     public EmployeeDTO(Long id, String employeeCode, String name, String cpf, LocalDate birthDate) {
         this.id = id;
         this.employeeCode = employeeCode;

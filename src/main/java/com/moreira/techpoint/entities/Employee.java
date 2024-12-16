@@ -100,4 +100,9 @@ public class Employee {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+    @PostPersist
+    private void generateCode() {
+        this.employeeCode = "EMP-" + this.id;
+    }
 }
