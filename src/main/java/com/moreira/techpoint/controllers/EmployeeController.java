@@ -3,6 +3,7 @@ package com.moreira.techpoint.controllers;
 import com.moreira.techpoint.dtos.EmployeeDTO;
 import com.moreira.techpoint.dtos.EmployeeMinDTO;
 import com.moreira.techpoint.services.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeDTO> insert(@RequestBody EmployeeDTO dto) {
+    public ResponseEntity<EmployeeDTO> insert(@Valid @RequestBody EmployeeDTO dto) {
         dto = service.insert(dto);
         return ResponseEntity.ok(dto);
     }

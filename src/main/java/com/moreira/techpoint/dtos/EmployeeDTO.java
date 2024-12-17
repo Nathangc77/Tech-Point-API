@@ -1,6 +1,10 @@
 package com.moreira.techpoint.dtos;
 
 import com.moreira.techpoint.entities.Employee;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
@@ -8,8 +12,14 @@ public class EmployeeDTO {
 
     private Long id;
     private String employeeCode;
+    @Size(min = 6, max = 80, message = "Campo precisa ter de 6 a 80 caracteres")
+    @NotBlank(message = "Campo requerido")
     private String name;
+    @Size(min = 11, max = 11, message = "Campo precisa ter 11 dígitos")
+    @NotBlank(message = "Campo requerido")
     private String cpf;
+    @NotNull(message = "Campo requerido")
+    @PastOrPresent(message = "Data inválida")
     private LocalDate birthDate;
 
     public EmployeeDTO() {

@@ -4,6 +4,7 @@ import com.moreira.techpoint.dtos.DeletionRequestDTO;
 import com.moreira.techpoint.dtos.TimeBankDTO;
 import com.moreira.techpoint.dtos.UpdateTimeBankDTO;
 import com.moreira.techpoint.services.TimeBankService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,7 +49,7 @@ public class TimeBankController {
     }
 
     @PostMapping(value = "/admin")
-    public ResponseEntity<TimeBankDTO> insertManual(@RequestBody TimeBankDTO dto) {
+    public ResponseEntity<TimeBankDTO> insertManual(@Valid @RequestBody TimeBankDTO dto) {
         dto = service.insertManual(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
@@ -62,13 +63,13 @@ public class TimeBankController {
     }
 
     @PutMapping(value = "/admin/{id}")
-    public ResponseEntity<TimeBankDTO> updateManual(@PathVariable Long id, @RequestBody TimeBankDTO dto) {
+    public ResponseEntity<TimeBankDTO> updateManual(@PathVariable Long id, @Valid @RequestBody TimeBankDTO dto) {
         dto = service.updateManual(id, dto);
         return ResponseEntity.ok(dto);
     }
 
     @PatchMapping(value = "/delete/{id}")
-    public ResponseEntity<Void> softDelete(@PathVariable Long id, @RequestBody DeletionRequestDTO dto)  {
+    public ResponseEntity<Void> softDelete(@PathVariable Long id, @Valid @RequestBody DeletionRequestDTO dto)  {
         service.softDelete(id, dto);
         return ResponseEntity.noContent().build();
     }

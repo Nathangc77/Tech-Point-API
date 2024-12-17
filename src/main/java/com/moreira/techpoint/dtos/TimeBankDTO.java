@@ -1,6 +1,8 @@
 package com.moreira.techpoint.dtos;
 
 import com.moreira.techpoint.entities.TimeBank;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -8,11 +10,14 @@ import java.time.LocalTime;
 public class TimeBankDTO {
 
     private Long id;
+    @NotNull(message = "Campo requerido")
     private LocalDate date;
+    @NotNull(message = "Campo requerido")
     private LocalTime clockIn;
     private LocalTime lunchOut;
     private LocalTime lunchIn;
     private LocalTime clockOut;
+    @NotNull(message = "Campo requerido")
     private Long employeeId;
 
     public TimeBankDTO(Long id, LocalDate date, LocalTime clockIn, LocalTime lunchOut, LocalTime lunchIn, LocalTime clockOut, Long employeeId) {
