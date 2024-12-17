@@ -2,6 +2,14 @@ INSERT INTO tb_employee (employee_code, name, cpf, birth_date, password) VALUES 
 INSERT INTO tb_employee (employee_code, name, cpf, birth_date, password) VALUES ('EMP-2', 'Bruno Costa', '98765432100', '1985-06-22', '123456');
 INSERT INTO tb_employee (employee_code, name, cpf, birth_date, password) VALUES ('EMP-3', 'Carla Souza', '45678912300', '1992-12-08', '123456');
 
+INSERT INTO tb_role (authority) VALUES ('ROLE_EMPLOYEE');
+INSERT INTO tb_role (authority) VALUES ('ROLE_ADMIN');
+
+INSERT INTO tb_employee_role (employee_id, role_id) VALUES (1, 1);
+INSERT INTO tb_employee_role (employee_id, role_id) VALUES (1, 2);
+INSERT INTO tb_employee_role (employee_id, role_id) VALUES (2, 1);
+INSERT INTO tb_employee_role (employee_id, role_id) VALUES (3, 1);
+
 INSERT INTO tb_time_bank (date, clock_in, lunch_out, lunch_in, clock_out, employee_code, is_deleted) VALUES ('2024-12-01', '08:00:00', '12:00:00', '13:00:00', '17:00:00', 1, false);
 INSERT INTO tb_time_bank (date, clock_in, lunch_out, lunch_in, clock_out, employee_code, is_deleted) VALUES ('2024-12-02', '08:05:00', '12:05:00', '13:05:00', '17:05:00', 1, false);
 INSERT INTO tb_time_bank (date, clock_in, lunch_out, lunch_in, clock_out, employee_code, is_deleted) VALUES ('2024-12-03', '08:10:00', '12:00:00', '13:00:00', '17:10:00', 1, false);

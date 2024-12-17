@@ -3,9 +3,7 @@ package com.moreira.techpoint.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "tb_employee")
@@ -23,7 +21,13 @@ public class Employee {
     private String password;
 
     @OneToMany(mappedBy = "employee")
-    List<TimeBank> timeBankList = new ArrayList<>();
+    private List<TimeBank> timeBankList = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(name = "tb_employee_role",
+            joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     public Employee() {
     }
@@ -87,6 +91,10 @@ public class Employee {
 
     public List<TimeBank> getTimeBankList() {
         return timeBankList;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
     }
 
     @Override
