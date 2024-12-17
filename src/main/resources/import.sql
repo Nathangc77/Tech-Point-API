@@ -1,6 +1,6 @@
-INSERT INTO tb_employee (employee_code, name, cpf, birth_date, password) VALUES ('EMP-1', 'Alice Silva', '12345678900', '1990-01-15', '123456');
-INSERT INTO tb_employee (employee_code, name, cpf, birth_date, password) VALUES ('EMP-2', 'Bruno Costa', '98765432100', '1985-06-22', '123456');
-INSERT INTO tb_employee (employee_code, name, cpf, birth_date, password) VALUES ('EMP-3', 'Carla Souza', '45678912300', '1992-12-08', '123456');
+INSERT INTO tb_employee (employee_code, name, cpf, birth_date, password) VALUES ('EMP-1', 'Alice Silva', '12345678900', '1990-01-15', '$2a$10$Twc/fGLac9DEXOaRU9UGg.Mm1FjBJ54GZnr61P7WELg/oIt9Mf7Qu');
+INSERT INTO tb_employee (employee_code, name, cpf, birth_date, password) VALUES ('EMP-2', 'Bruno Costa', '98765432100', '1985-06-22', '$2a$10$Twc/fGLac9DEXOaRU9UGg.Mm1FjBJ54GZnr61P7WELg/oIt9Mf7Qu');
+INSERT INTO tb_employee (employee_code, name, cpf, birth_date, password) VALUES ('EMP-3', 'Carla Souza', '45678912300', '1992-12-08', '$2a$10$Twc/fGLac9DEXOaRU9UGg.Mm1FjBJ54GZnr61P7WELg/oIt9Mf7Qu');
 
 INSERT INTO tb_role (authority) VALUES ('ROLE_EMPLOYEE');
 INSERT INTO tb_role (authority) VALUES ('ROLE_ADMIN');
