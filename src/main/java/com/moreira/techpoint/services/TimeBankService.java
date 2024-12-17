@@ -5,6 +5,8 @@ import com.moreira.techpoint.dtos.TimeBankDTO;
 import com.moreira.techpoint.dtos.UpdateTimeBankDTO;
 import com.moreira.techpoint.entities.Employee;
 import com.moreira.techpoint.entities.TimeBank;
+import com.moreira.techpoint.services.exceptions.InvalidTimeBankUpdateException;
+import com.moreira.techpoint.services.exceptions.ResourceNotFoundException;
 import com.moreira.techpoint.repositories.EmployeeRepository;
 import com.moreira.techpoint.repositories.TimeBankRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +34,19 @@ public class TimeBankService {
 
     @Transactional(readOnly = true)
     public Page<TimeBankDTO> searchTimeBankByEmployee(String employeeCode, Pageable pageable) {
-        System.out.println(employeeCode);
         Page<TimeBank> result = repository.searchByEmployeeCode(employeeCode, pageable);
+        if (result.isEmpty()) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }
         return result.map(x -> new TimeBankDTO(x));
+
     }
 
     @Transactional(readOnly = true)
     public TimeBankDTO findById(Long id) {
-        TimeBank entity = repository.findById(id).get();
+        TimeBank entity = repository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Recurso não encontrado")
+        );
         return new TimeBankDTO(entity);
     }
 
@@ -69,55 +76,67 @@ public class TimeBankService {
 
     @Transactional
     public TimeBankDTO update(Long id, UpdateTimeBankDTO dto) {
-        TimeBank entity = repository.getReferenceById(id);
+        try {
+            TimeBank entity = repository.getReferenceById(id);
 
-        if (dto.isUpdateLunchOut() && entity.getLunchOut() == null && LocalTime.now().isAfter(entity.getClockIn())) {
-            entity.setLunchOut(LocalTime.now().withNano(0));
-        } else if (dto.isUpdateLunchIn() && entity.getLunchIn() == null && LocalTime.now().isAfter(entity.getLunchOut())) {
-            entity.setLunchIn(LocalTime.now().withNano(0));
-        } else if (dto.isUpdateClockOut() && entity.getClockOut() == null && LocalTime.now().isAfter(entity.getLunchIn())) {
-            entity.setClockOut(LocalTime.now().withNano(0));
-        } else {
-            throw new IllegalArgumentException();
+            if (dto.isUpdateLunchOut() && entity.getLunchOut() == null && LocalTime.now().isAfter(entity.getClockIn())) {
+                entity.setLunchOut(LocalTime.now().withNano(0));
+            } else if (dto.isUpdateLunchIn() && entity.getLunchIn() == null && LocalTime.now().isAfter(entity.getLunchOut())) {
+                entity.setLunchIn(LocalTime.now().withNano(0));
+            } else if (dto.isUpdateClockOut() && entity.getClockOut() == null && LocalTime.now().isAfter(entity.getLunchIn())) {
+                entity.setClockOut(LocalTime.now().withNano(0));
+            } else {
+                throw new InvalidTimeBankUpdateException("O horário de saída já foi registrado");
+            }
+
+            entity = repository.save(entity);
+            return new TimeBankDTO(entity);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
         }
-
-        entity = repository.save(entity);
-        return new TimeBankDTO(entity);
     }
 
     @Transactional
     public TimeBankDTO updateManual(Long id, TimeBankDTO dto) {
-        TimeBank entity = repository.getReferenceById(id);
+        try {
+            TimeBank entity = repository.getReferenceById(id);
 
-        if ((dto.getLunchOut() != null && entity.getClockIn() != null &&
-                (entity.getLunchOut() == null || entity.getClockIn().isBefore(dto.getLunchOut())))) {
-            entity.setLunchOut(dto.getLunchOut());
+            if ((dto.getLunchOut() != null && entity.getClockIn() != null &&
+                    (entity.getLunchOut() == null || entity.getClockIn().isBefore(dto.getLunchOut())))) {
+                entity.setLunchOut(dto.getLunchOut());
+            }
+
+            if ((dto.getLunchIn() != null && entity.getLunchOut() != null &&
+                    (entity.getLunchIn() == null || entity.getLunchOut().isBefore(dto.getLunchIn())))) {
+                entity.setLunchIn(dto.getLunchIn());
+            }
+
+            if ((dto.getClockOut() != null && entity.getLunchIn() != null &&
+                    (entity.getClockOut() == null || entity.getLunchIn().isBefore(dto.getClockOut())))) {
+                entity.setClockOut(dto.getClockOut());
+            }
+
+            if ((dto.getClockIn() != null && (entity.getClockIn() == null || entity.getClockIn().isBefore(dto.getLunchOut())))) {
+                entity.setClockIn(dto.getClockIn());
+            }
+
+            entity = repository.save(entity);
+            return new TimeBankDTO(entity);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
         }
-
-        if ((dto.getLunchIn() != null && entity.getLunchOut() != null &&
-                (entity.getLunchIn() == null || entity.getLunchOut().isBefore(dto.getLunchIn())))) {
-            entity.setLunchIn(dto.getLunchIn());
-        }
-
-        if ((dto.getClockOut() != null && entity.getLunchIn() != null &&
-                (entity.getClockOut() == null || entity.getLunchIn().isBefore(dto.getClockOut())))) {
-            entity.setClockOut(dto.getClockOut());
-        }
-
-        if ((dto.getClockIn() != null && (entity.getClockIn() == null || entity.getClockIn().isBefore(dto.getLunchOut())))) {
-            entity.setClockIn(dto.getClockIn());
-        }
-
-        entity = repository.save(entity);
-        return new TimeBankDTO(entity);
     }
 
     @Transactional
     public void softDelete(Long id, DeletionRequestDTO dto) {
-        TimeBank entity = repository.getReferenceById(id);
-        entity.setDeleted(true);
-        entity.setDeleteReason(dto.getDeleteReason());
-        repository.save(entity);
+        try {
+            TimeBank entity = repository.getReferenceById(id);
+            entity.setDeleted(true);
+            entity.setDeleteReason(dto.getDeleteReason());
+            repository.save(entity);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }
     }
 
     private void copyDtoForEntity(TimeBankDTO dto, TimeBank entity) {

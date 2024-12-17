@@ -16,6 +16,7 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository repository;
 
+    @Transactional(readOnly = true)
     public List<EmployeeMinDTO> findAll() {
         List<Employee> result = repository.findAll();
         return result.stream().map(x -> new EmployeeMinDTO(x)).toList();
