@@ -101,6 +101,10 @@ public class TimeBankService {
         try {
             TimeBank entity = repository.getReferenceById(id);
 
+            if ((dto.getClockIn() != null && (entity.getClockIn() == null || entity.getClockIn().isAfter(dto.getLunchOut())))) {
+                entity.setClockIn(dto.getClockIn());
+            }
+
             if ((dto.getLunchOut() != null && entity.getClockIn() != null &&
                     (entity.getLunchOut() == null || entity.getClockIn().isBefore(dto.getLunchOut())))) {
                 entity.setLunchOut(dto.getLunchOut());
@@ -114,10 +118,6 @@ public class TimeBankService {
             if ((dto.getClockOut() != null && entity.getLunchIn() != null &&
                     (entity.getClockOut() == null || entity.getLunchIn().isBefore(dto.getClockOut())))) {
                 entity.setClockOut(dto.getClockOut());
-            }
-
-            if ((dto.getClockIn() != null && (entity.getClockIn() == null || entity.getClockIn().isBefore(dto.getLunchOut())))) {
-                entity.setClockIn(dto.getClockIn());
             }
 
             entity = repository.save(entity);

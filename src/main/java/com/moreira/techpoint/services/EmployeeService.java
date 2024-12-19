@@ -70,7 +70,7 @@ public class EmployeeService implements UserDetailsService {
 
             return repository.findByEmployeeCode(username).get();
         } catch (Exception e) {
-            throw new ResourceNotFoundException("Usuário não encontrado");
+            throw new UsernameNotFoundException("Usuário não encontrado");
         }
     }
 
