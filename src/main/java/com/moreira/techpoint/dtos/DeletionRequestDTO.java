@@ -9,6 +9,9 @@ public class DeletionRequestDTO {
     @NotBlank(message = "Campo Requerido")
     private String deleteReason;
 
+    public DeletionRequestDTO() {
+    }
+
     public DeletionRequestDTO(String deleteReason) {
         this.deleteReason = deleteReason;
     }

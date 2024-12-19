@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -21,25 +22,28 @@ public class TimeBankController {
     @Autowired
     private TimeBankService service;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<Page<TimeBankDTO>> findAll(Pageable pageable) {
         Page<TimeBankDTO> result = service.findAll(pageable);
         return ResponseEntity.ok(result);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_EMPLOYEE', 'ROLE_ADMIN')")
     @GetMapping(value = "/employee")
     public ResponseEntity<Page<TimeBankDTO>> searchTimeBankByEmployee(@RequestParam(name="code") String employeeCode, Pageable pageable) {
         Page<TimeBankDTO> result = service.searchTimeBankByEmployee(employeeCode, pageable);
         return ResponseEntity.ok(result);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<TimeBankDTO> findById(@PathVariable Long id) {
         TimeBankDTO dto = service.findById(id);
         return ResponseEntity.ok(dto);
     }
 
-
+    @PreAuthorize("hasAnyRole('ROLE_EMPLOYEE', 'ROLE_ADMIN')")
     @PostMapping(value = "/{employeeId}")
     public ResponseEntity<TimeBankDTO> insert(@PathVariable Long employeeId) {
         TimeBankDTO dto = service.insert(employeeId);
@@ -48,6 +52,7 @@ public class TimeBankController {
         return ResponseEntity.created(uri).body(dto);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value = "/admin")
     public ResponseEntity<TimeBankDTO> insertManual(@Valid @RequestBody TimeBankDTO dto) {
         dto = service.insertManual(dto);
@@ -56,18 +61,21 @@ public class TimeBankController {
         return ResponseEntity.created(uri).body(dto);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_EMPLOYEE', 'ROLE_ADMIN')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<TimeBankDTO> update(@PathVariable Long id, @RequestBody UpdateTimeBankDTO dto) {
         TimeBankDTO timeBankDTO = service.update(id, dto);
         return ResponseEntity.ok(timeBankDTO);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(value = "/admin/{id}")
     public ResponseEntity<TimeBankDTO> updateManual(@PathVariable Long id, @Valid @RequestBody TimeBankDTO dto) {
         dto = service.updateManual(id, dto);
         return ResponseEntity.ok(dto);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping(value = "/delete/{id}")
     public ResponseEntity<Void> softDelete(@PathVariable Long id, @Valid @RequestBody DeletionRequestDTO dto)  {
         service.softDelete(id, dto);
