@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
 @Repository
 public interface TimeBankRepository extends JpaRepository<TimeBank, Long> {
 
@@ -15,4 +18,10 @@ public interface TimeBankRepository extends JpaRepository<TimeBank, Long> {
             WHERE obj.employee.employeeCode = :employeeCode
             """)
     Page<TimeBank> searchByEmployeeCode(String employeeCode, Pageable pageable);
+
+    @Query("""
+            SELECT obj FROM TimeBank obj
+            WHERE obj.date = :date AND obj.employee.id = :employeeId
+            """)
+    Optional<TimeBank> searchByEmployeeAndDate(Long employeeId, LocalDate date);
 }

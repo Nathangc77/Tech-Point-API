@@ -5,6 +5,7 @@ import com.moreira.techpoint.dtos.TimeBankDTO;
 import com.moreira.techpoint.dtos.UpdateTimeBankDTO;
 import com.moreira.techpoint.entities.Employee;
 import com.moreira.techpoint.entities.TimeBank;
+import com.moreira.techpoint.services.exceptions.DuplicateResourceException;
 import com.moreira.techpoint.services.exceptions.InvalidTimeBankUpdateException;
 import com.moreira.techpoint.services.exceptions.ResourceNotFoundException;
 import com.moreira.techpoint.repositories.EmployeeRepository;
@@ -56,10 +57,15 @@ public class TimeBankService {
     @Transactional
     public TimeBankDTO insert(Long employeeId) {
         Employee employee = employeeRepository.getReferenceById(employeeId);
+        authService.validateEmployeeOrAdmin(employeeId);
+
         TimeBank entity = new TimeBank();
         entity.setEmployee(employee);
         entity.setDate(LocalDate.now());
         entity.setClockIn(LocalTime.now().withNano(0));
+
+        if (repository.searchByEmployeeAndDate(employee.getId(), entity.getDate()).isPresent())
+            throw new DuplicateResourceException("Registro já existente");
 
         entity = repository.save(entity);
         return new TimeBankDTO(entity);

@@ -2,6 +2,7 @@ package com.moreira.techpoint.controllers.handlers;
 
 import com.moreira.techpoint.dtos.CustomError;
 import com.moreira.techpoint.dtos.ValidationError;
+import com.moreira.techpoint.services.exceptions.DuplicateResourceException;
 import com.moreira.techpoint.services.exceptions.ForbbidenException;
 import com.moreira.techpoint.services.exceptions.InvalidTimeBankUpdateException;
 import com.moreira.techpoint.services.exceptions.ResourceNotFoundException;
@@ -46,6 +47,13 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(ForbbidenException.class)
     public ResponseEntity<CustomError> forbbiden(ForbbidenException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.FORBIDDEN;
+        CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<CustomError> duplicateResource(DuplicateResourceException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
