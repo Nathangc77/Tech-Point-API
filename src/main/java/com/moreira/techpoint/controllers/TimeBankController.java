@@ -36,7 +36,7 @@ public class TimeBankController {
         return ResponseEntity.ok(result);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_EMPLOYEE', 'ROLE_ADMIN')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<TimeBankDTO> findById(@PathVariable Long id) {
         TimeBankDTO dto = service.findById(id);

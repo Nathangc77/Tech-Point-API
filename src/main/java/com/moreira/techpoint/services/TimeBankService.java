@@ -25,6 +25,8 @@ public class TimeBankService {
     private TimeBankRepository repository;
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private AuthService authService;
 
     @Transactional(readOnly = true)
     public Page<TimeBankDTO> findAll(Pageable pageable) {
@@ -47,6 +49,7 @@ public class TimeBankService {
         TimeBank entity = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Recurso não encontrado")
         );
+        authService.validateEmployeeOrAdmin(entity.getEmployee().getId());
         return new TimeBankDTO(entity);
     }
 
