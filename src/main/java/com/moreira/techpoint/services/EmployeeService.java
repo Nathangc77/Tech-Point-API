@@ -6,10 +6,14 @@ import com.moreira.techpoint.entities.Employee;
 import com.moreira.techpoint.entities.Role;
 import com.moreira.techpoint.projections.UserDetailsProjection;
 import com.moreira.techpoint.repositories.EmployeeRepository;
+import com.moreira.techpoint.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,5 +60,23 @@ public class EmployeeService implements UserDetailsService {
         }
 
         return employee;
+    }
+
+    protected Employee authenticated() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Jwt jwtPrincipal = (Jwt) authentication.getPrincipal();
+            String username = jwtPrincipal.getClaim("username");
+
+            return repository.findByEmployeeCode(username).get();
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Usuário não encontrado");
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public EmployeeDTO getMe() {
+        Employee employee = authenticated();
+        return new EmployeeDTO(employee);
     }
 }

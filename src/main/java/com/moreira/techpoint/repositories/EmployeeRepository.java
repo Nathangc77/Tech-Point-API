@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
@@ -20,4 +21,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
             WHERE tb_employee.employee_code = :employeeCode
             """)
     List<UserDetailsProjection> searchEmployeeAndRolesByEmployeeCode(String employeeCode);
+
+    Optional<Employee> findByEmployeeCode(String employeeCode);
 }

@@ -31,4 +31,11 @@ public class EmployeeController {
         dto = service.insert(dto);
         return ResponseEntity.ok(dto);
     }
+
+    @PreAuthorize("hasAnyRole('ROLE_EMPLOYEE', 'ROLE_ADMIN')")
+    @GetMapping(value = "/me")
+    public ResponseEntity<EmployeeDTO> getMe() {
+        EmployeeDTO dto = service.getMe();
+        return ResponseEntity.ok(dto);
+    }
 }
