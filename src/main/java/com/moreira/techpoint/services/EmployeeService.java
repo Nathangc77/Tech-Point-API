@@ -6,6 +6,7 @@ import com.moreira.techpoint.entities.Employee;
 import com.moreira.techpoint.entities.Role;
 import com.moreira.techpoint.projections.UserDetailsProjection;
 import com.moreira.techpoint.repositories.EmployeeRepository;
+import com.moreira.techpoint.services.exceptions.DuplicateResourceException;
 import com.moreira.techpoint.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -33,6 +34,9 @@ public class EmployeeService implements UserDetailsService {
 
     @Transactional
     public EmployeeDTO insert(EmployeeDTO dto) {
+        if (repository.findByCpf(dto.getCpf()).isPresent())
+            throw new DuplicateResourceException("Usuário já existe");
+
         Employee entity = new Employee();
         entity.setName(dto.getName());
         entity.setCpf(dto.getCpf());
