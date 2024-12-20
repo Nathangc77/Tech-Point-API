@@ -14,8 +14,11 @@ public class TimeBankDTO {
     private LocalDate date;
     @NotNull(message = "Campo requerido")
     private LocalTime clockIn;
+    @NotNull(message = "Campo requerido")
     private LocalTime lunchOut;
+    @NotNull(message = "Campo requerido")
     private LocalTime lunchIn;
+    @NotNull(message = "Campo requerido")
     private LocalTime clockOut;
     @NotNull(message = "Campo requerido")
     private Long employeeId;

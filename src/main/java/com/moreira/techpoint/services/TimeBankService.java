@@ -123,22 +123,19 @@ public class TimeBankService {
         try {
             TimeBank entity = repository.getReferenceById(id);
 
-            if ((dto.getClockIn() != null && (entity.getClockIn() == null || entity.getClockIn().isAfter(dto.getLunchOut())))) {
+            if (dto.getClockIn().isBefore(dto.getLunchOut())) {
                 entity.setClockIn(dto.getClockIn());
             }
 
-            if ((dto.getLunchOut() != null && entity.getClockIn() != null &&
-                    (entity.getLunchOut() == null || entity.getClockIn().isBefore(dto.getLunchOut())))) {
+            if (dto.getLunchOut().isAfter(dto.getClockIn()) && dto.getLunchOut().isBefore(dto.getLunchIn())) {
                 entity.setLunchOut(dto.getLunchOut());
             }
 
-            if ((dto.getLunchIn() != null && entity.getLunchOut() != null &&
-                    (entity.getLunchIn() == null || entity.getLunchOut().isBefore(dto.getLunchIn())))) {
+            if (dto.getLunchIn().isAfter(dto.getLunchOut()) && dto.getLunchOut().isBefore(dto.getClockOut())) {
                 entity.setLunchIn(dto.getLunchIn());
             }
 
-            if ((dto.getClockOut() != null && entity.getLunchIn() != null &&
-                    (entity.getClockOut() == null || entity.getLunchIn().isBefore(dto.getClockOut())))) {
+            if (dto.getClockOut().isAfter(dto.getLunchIn())) {
                 entity.setClockOut(dto.getClockOut());
             }
 
