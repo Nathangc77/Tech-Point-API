@@ -73,6 +73,9 @@ public class TimeBankService {
 
     @Transactional
     public TimeBankDTO insertManual(TimeBankDTO dto) {
+        if (repository.searchByEmployeeAndDate(dto.getEmployeeId(), dto.getDate()).isPresent())
+            throw new DuplicateResourceException("Registro já existente");
+
         TimeBank entity = new TimeBank();
         copyDtoForEntity(dto, entity);
 
