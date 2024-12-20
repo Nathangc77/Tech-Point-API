@@ -89,7 +89,15 @@ public class TimeBankService {
     @Transactional
     public TimeBankDTO update(Long id, UpdateTimeBankDTO dto) {
         try {
-            TimeBank entity = repository.getReferenceById(id);
+            Employee employee = employeeRepository.getReferenceById(id);
+
+            TimeBank entity = repository.searchByEmployeeAndDate(employee.getId(), LocalDate.now()).orElseThrow(
+                    () -> new ResourceNotFoundException("Recurso não encontrado")
+            );
+
+            authService.validateEmployeeOrAdmin(id);
+            if (entity.isDeleted())
+                throw new ResourceNotFoundException("Recurso não encontrado");
 
             if (dto.isUpdateLunchOut() && entity.getLunchOut() == null && LocalTime.now().isAfter(entity.getClockIn())) {
                 entity.setLunchOut(LocalTime.now().withNano(0));
@@ -98,13 +106,15 @@ public class TimeBankService {
             } else if (dto.isUpdateClockOut() && entity.getClockOut() == null && LocalTime.now().isAfter(entity.getLunchIn())) {
                 entity.setClockOut(LocalTime.now().withNano(0));
             } else {
-                throw new InvalidTimeBankUpdateException("O horário de saída já foi registrado");
+                throw new InvalidTimeBankUpdateException("Registro inválido");
             }
 
             entity = repository.save(entity);
             return new TimeBankDTO(entity);
+        } catch (ResourceNotFoundException | InvalidTimeBankUpdateException e) {
+            throw e;
         } catch (Exception e) {
-            throw new ResourceNotFoundException("Recurso não encontrado");
+            throw new InvalidTimeBankUpdateException("Erro ao registrar atualização do banco de horas.");
         }
     }
 
