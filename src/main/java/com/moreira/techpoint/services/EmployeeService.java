@@ -7,6 +7,7 @@ import com.moreira.techpoint.entities.Employee;
 import com.moreira.techpoint.entities.Role;
 import com.moreira.techpoint.projections.UserDetailsProjection;
 import com.moreira.techpoint.repositories.EmployeeRepository;
+import com.moreira.techpoint.repositories.RoleRepository;
 import com.moreira.techpoint.services.exceptions.DuplicateResourceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -27,6 +28,9 @@ public class EmployeeService implements UserDetailsService {
     private EmployeeRepository repository;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private PasswordEncoderConfig passwordEncoder;
 
     @Transactional(readOnly = true)
@@ -45,6 +49,9 @@ public class EmployeeService implements UserDetailsService {
         entity.setCpf(dto.getCpf());
         entity.setBirthDate(dto.getBirthDate());
         entity.setPassword(passwordEncoder.passwordEncoder().encode(dto.getCpf()));
+
+        Role role = roleRepository.getReferenceById(1L);
+        entity.addRole(role);
 
         entity = repository.save(entity);
         return new EmployeeDTO(entity);
