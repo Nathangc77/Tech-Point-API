@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     @Autowired
-    EmployeeService employeeService;
+    private EmployeeService employeeService;
 
     public void validateEmployeeOrAdmin(Long id) {
         Employee employee = employeeService.authenticated();

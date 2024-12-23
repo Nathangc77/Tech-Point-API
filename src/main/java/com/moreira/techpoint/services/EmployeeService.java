@@ -1,12 +1,13 @@
 package com.moreira.techpoint.services;
 
+import com.moreira.techpoint.config.PasswordEncoderConfig;
 import com.moreira.techpoint.dtos.EmployeeDTO;
 import com.moreira.techpoint.dtos.EmployeeMinDTO;
 import com.moreira.techpoint.entities.Employee;
 import com.moreira.techpoint.entities.Role;
 import com.moreira.techpoint.projections.UserDetailsProjection;
 import com.moreira.techpoint.repositories.EmployeeRepository;
-import com.moreira.techpoint.services.exceptions.ResourceNotFoundException;
+import com.moreira.techpoint.services.exceptions.DuplicateResourceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +26,9 @@ public class EmployeeService implements UserDetailsService {
     @Autowired
     private EmployeeRepository repository;
 
+    @Autowired
+    private PasswordEncoderConfig passwordEncoder;
+
     @Transactional(readOnly = true)
     public List<EmployeeMinDTO> findAll() {
         List<Employee> result = repository.findAll();
@@ -33,14 +37,16 @@ public class EmployeeService implements UserDetailsService {
 
     @Transactional
     public EmployeeDTO insert(EmployeeDTO dto) {
+        if (repository.findByCpf(dto.getCpf()).isPresent())
+            throw new DuplicateResourceException("Usuário já existe");
+
         Employee entity = new Employee();
         entity.setName(dto.getName());
         entity.setCpf(dto.getCpf());
         entity.setBirthDate(dto.getBirthDate());
-        entity.setPassword(dto.getCpf());
+        entity.setPassword(passwordEncoder.passwordEncoder().encode(dto.getCpf()));
 
         entity = repository.save(entity);
-
         return new EmployeeDTO(entity);
     }
 

@@ -23,4 +23,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     List<UserDetailsProjection> searchEmployeeAndRolesByEmployeeCode(String employeeCode);
 
     Optional<Employee> findByEmployeeCode(String employeeCode);
+
+    Optional<Object> findByCpf(String cpf);
 }
