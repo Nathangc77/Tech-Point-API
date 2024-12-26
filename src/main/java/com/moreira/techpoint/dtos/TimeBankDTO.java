@@ -1,6 +1,7 @@
 package com.moreira.techpoint.dtos;
 
 import com.moreira.techpoint.entities.TimeBank;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -9,6 +10,7 @@ import java.time.LocalTime;
 
 public class TimeBankDTO {
 
+    @Schema(description = "Database generated movie ID")
     private Long id;
     @NotNull(message = "Campo requerido")
     private LocalDate date;
